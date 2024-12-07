@@ -1,42 +1,47 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+  - stage: "Terraform_Deployment"
+    jobs:
+      - job: "AKS_Deployment"
+        pool:
+          vmImage: 'ubuntu-latest'
 
-- task: TerraformInstaller@1
-  inputs:
-    terraformVersion: 'latest'
+        steps:
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
 
-- task: TerraformTaskV1@0
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(Build.SourcesDirectory)'
+          - task: TerraformTaskV1@0
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
-- task: TerraformTaskV1@0
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-    workingDirectory: '$(Build.SourcesDirectory)'
+          - task: TerraformTaskV1@0
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
-- task: TerraformTaskV1@0
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    environmentServiceNameAzureRM: 'azure_service_connection'
-    workingDirectory: '$(Build.SourcesDirectory)'
-    commandOptions: '-out=tfplan'
+          - task: TerraformTaskV1@0
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: 'azure_service_connection'
+              workingDirectory: '$(Build.SourcesDirectory)'
+              commandOptions: '-out=tfplan'
 
-- task: TerraformTaskV1@0
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    workingDirectory: '$(Build.SourcesDirectory)'
-    commandOptions: 'tfplan --auto-approve'
-    environmentServiceName: 'azure_service_connection'
-    backendServiceArm: 'azure_service_connection'
-    backendAzureRmResourceGroupName: '$(RESOURCE_GROUP)'
-    backendAzureRmStorageAccountName: '$(AZURE_STORAGE_ACCOUNT_NAME)'
-    backendAzureRmContainerName: 'tfstate'
-    backendAzureRmKey: 'terraform.tfstate'
+          - task: TerraformTaskV1@0
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(Build.SourcesDirectory)'
+              commandOptions: 'tfplan --auto-approve'
+              environmentServiceName: 'azure_service_connection'
+              backendServiceArm: 'azure_service_connection'
+              backendAzureRmResourceGroupName: '$(RESOURCE_GROUP)'
+              backendAzureRmStorageAccountName: '$(AZURE_STORAGE_ACCOUNT_NAME)'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'terraform.tfstate'
