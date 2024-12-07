@@ -5,11 +5,12 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  terraformVersion: '0.15.3'
+  terraformVersion: '1.5.0'
 
-- task: TerraformInstaller@0
+- task: UseTerraformCLI@0
+  displayName: 'Install Terraform $(terraformVersion)'
   inputs:
-    terraformVersion: '$(terraformVersion)'
+    terraformVersion: $(terraformVersion)
 
 - task: Bash@3
   displayName: 'Terraform Init'
