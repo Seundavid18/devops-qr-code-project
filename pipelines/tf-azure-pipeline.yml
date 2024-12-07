@@ -18,6 +18,7 @@ stages:
             displayName: 'Install Terraform'
             inputs:
               terraformVersion: 'latest'
+            workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
 
           - task: TerraformTaskV4@4
             displayName: 'Terraform Init'
