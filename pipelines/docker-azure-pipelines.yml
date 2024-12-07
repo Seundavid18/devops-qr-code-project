@@ -4,8 +4,8 @@ trigger:
       - main
   paths:
     include:
-      - 'api/Dockerfile'
-      - 'front-end-nextjs/Dockerfile'
+      - '../api/Dockerfile'
+      - '../front-end-nextjs/Dockerfile'
 
 pool:
   vmImage: ubuntu-latest

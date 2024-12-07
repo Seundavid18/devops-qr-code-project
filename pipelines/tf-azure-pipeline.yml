@@ -1,0 +1,40 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  terraformVersion: '0.15.3'
+
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: '$(terraformVersion)'
+
+- task: Terraform@0
+  inputs:
+    command: 'init'
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+- task: Terraform@0
+  inputs:
+    command: 'validate'
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+- task: Terraform@0
+  inputs:
+    command: 'plan'
+    workingDirectory: '$(Build.SourcesDirectory)'
+    commandOptions: '-out=tfplan'
+
+- task: Terraform@0
+  inputs:
+    command: 'apply'
+    workingDirectory: '$(Build.SourcesDirectory)'
+    commandOptions: 'tfplan'
+    environmentServiceName: '$(AZURE_SUBSCRIPTION)'
+    backendServiceArm: '$(AZURE_SUBSCRIPTION)'
+    backendAzureRmResourceGroupName: '$(RESOURCE_GROUP)'
+    backendAzureRmStorageAccountName: '$(AZURE_STORAGE_ACCOUNT_NAME)'
+    backendAzureRmContainerName: 'tfstate'
+    backendAzureRmKey: 'terraform.tfstate'
