@@ -1,6 +1,11 @@
 trigger:
 - main
 
+variables:
+  azureServiceConnection: 'azure_service_connection'
+  backendResourceGroup: 'rg-qr-code'
+  backendStorageAccountName: 'tfqrcode'
+
 stages:
   - stage: "Terraform_Deployment"
     jobs:
@@ -20,9 +25,9 @@ stages:
               provider: 'azurerm'
               command: 'init'
               workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
-              backendServiceArm: 'azure_service_connection'
-              backendAzureRmResourceGroupName: '$(RESOURCE_GROUP)'
-              backendAzureRmStorageAccountName: '$(AZURE_STORAGE_ACCOUNT_NAME)'
+              backendServiceArm: 'azureServiceConnection'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccountName)'
               backendAzureRmContainerName: 'tfstate'
               backendAzureRmKey: 'terraform.tfstate'
 
@@ -38,7 +43,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'plan'
-              environmentServiceNameAzureRM: 'azure_service_connection'
+              environmentServiceNameAzureRM: 'azureServiceConnection'
               workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
               commandOptions: '-out=tfplan'
 
@@ -49,9 +54,9 @@ stages:
               command: 'apply'
               workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
               commandOptions: 'tfplan --auto-approve'
-              environmentServiceName: 'azure_service_connection'
-              backendServiceArm: 'azure_service_connection'
-              backendAzureRmResourceGroupName: '$(RESOURCE_GROUP)'
-              backendAzureRmStorageAccountName: '$(AZURE_STORAGE_ACCOUNT_NAME)'
+              environmentServiceName: 'azureServiceConnection'
+              backendServiceArm: 'azureServiceConnection'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccountName)'
               backendAzureRmContainerName: 'tfstate'
               backendAzureRmKey: 'terraform.tfstate'
