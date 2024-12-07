@@ -11,27 +11,38 @@ variables:
   inputs:
     terraformVersion: '$(terraformVersion)'
 
-- task: Terraform@0
+- task: Bash@3
+  displayName: 'Terraform Init'
   inputs:
-    command: 'init'
+    targetType: 'inline'
+    script: |
+      terraform -version
+      terraform init -input=false
     workingDirectory: '$(Build.SourcesDirectory)'
 
-- task: Terraform@0
+- task: Bash@3
+  displayName: 'Terraform Validate'
   inputs:
-    command: 'validate'
+    targetType: 'inline'
+    script: |
+      terraform validate
     workingDirectory: '$(Build.SourcesDirectory)'
 
-- task: Terraform@0
+- task: Bash@3
+  displayName: 'Terraform Plan'
   inputs:
-    command: 'plan'
+    targetType: 'inline'
+    script: |
+      terraform plan -input=false -out=tfplan
     workingDirectory: '$(Build.SourcesDirectory)'
-    commandOptions: '-out=tfplan'
 
-- task: Terraform@0
+- task: Bash@3
+  displayName: 'Terraform Apply'
   inputs:
-    command: 'apply'
+    targetType: 'inline'
+    script: |
+      terraform apply -input=false tfplan
     workingDirectory: '$(Build.SourcesDirectory)'
-    commandOptions: 'tfplan'
     environmentServiceName: '$(AZURE_SUBSCRIPTION)'
     backendServiceArm: '$(AZURE_SUBSCRIPTION)'
     backendAzureRmResourceGroupName: '$(RESOURCE_GROUP)'
