@@ -1,12 +1,8 @@
 trigger:
 - main
 
-stages:
-  - stage: "Terraform_Deployment"
-    jobs:
-      - job: "AKS Deployment"
-        pool:
-          vmImage: 'ubuntu-latest'
+pool:
+  vmImage: 'ubuntu-latest'
 
         steps:
           - task: TerraformInstaller@1
