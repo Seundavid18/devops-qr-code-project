@@ -25,7 +25,7 @@ stages:
               provider: 'azurerm'
               command: 'init'
               workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
-              backendServiceArm: 'azureServiceConnection'
+              backendServiceArm: '$(azureServiceConnection)'
               backendAzureRmResourceGroupName: '$(backendResourceGroup)'
               backendAzureRmStorageAccountName: '$(backendStorageAccountName)'
               backendAzureRmContainerName: 'tfstate'
@@ -43,7 +43,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'plan'
-              environmentServiceNameAzureRM: 'azureServiceConnection'
+              environmentServiceNameAzureRM: '$(azureServiceConnection)'
               workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
               commandOptions: '-out=tfplan'
 
@@ -54,8 +54,8 @@ stages:
               command: 'apply'
               workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
               commandOptions: 'tfplan --auto-approve'
-              environmentServiceName: 'azureServiceConnection'
-              backendServiceArm: 'azureServiceConnection'
+              environmentServiceName: '$(azureServiceConnection)'
+              backendServiceArm: '$(azureServiceConnection)'
               backendAzureRmResourceGroupName: '$(backendResourceGroup)'
               backendAzureRmStorageAccountName: '$(backendStorageAccountName)'
               backendAzureRmContainerName: 'tfstate'
