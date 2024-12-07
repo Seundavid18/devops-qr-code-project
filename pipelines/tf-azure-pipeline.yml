@@ -3,6 +3,7 @@ trigger:
 
 variables:
   azureServiceConnection: 'azure_service_connection'
+  terraformVersion: '1.5.5'
   backendResourceGroup: 'rg-qr-code'
   backendStorageAccountName: 'tfqrcode'
 
@@ -14,11 +15,10 @@ stages:
           vmImage: 'ubuntu-latest'
 
         steps:
-          - task: TerraformInstaller@1
+          - task: TerraformInstaller@0
             displayName: 'Install Terraform'
             inputs:
-              terraformVersion: 'latest'
-              workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
+              terraformVersion: '$(terraformVersion)'
 
           - task: TerraformTaskV4@4
             displayName: 'Terraform Init'
