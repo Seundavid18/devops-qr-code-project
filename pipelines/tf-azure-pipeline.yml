@@ -25,7 +25,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
-              workingDirectory: '../product-infrastructure'
+              workingDirectory: '$(System.DefaultWorkingDirectory/product-infrastructure)'
               backendServiceArm: '$(azureServiceConnection)'
               backendAzureRmResourceGroupName: '$(backendResourceGroup)'
               backendAzureRmStorageAccountName: '$(backendStorageAccountName)'
@@ -37,7 +37,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'validate'
-              workingDirectory: '../product-infrastructure'
+              workingDirectory: '$(System.DefaultWorkingDirectory/product-infrastructure)'
 
           - task: TerraformTaskV4@4
             displayName: 'Terraform Plan'
@@ -45,7 +45,7 @@ stages:
               provider: 'azurerm'
               command: 'plan'
               environmentServiceNameAzureRM: '$(azureServiceConnection)'
-              workingDirectory: '../product-infrastructure'
+              workingDirectory: '$(System.DefaultWorkingDirectory/product-infrastructure)'
               commandOptions: '-out=tfplan'
 
           - task: TerraformTaskV4@4
@@ -53,7 +53,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              workingDirectory: '../product-infrastructure'
+              workingDirectory: '$(System.DefaultWorkingDirectory/product-infrastructure)'
               commandOptions: 'tfplan --auto-approve'
               environmentServiceName: '$(azureServiceConnection)'
               backendServiceArm: '$(azureServiceConnection)'
