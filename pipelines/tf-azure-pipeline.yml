@@ -3,7 +3,7 @@ trigger:
 
 variables:
   azureServiceConnection: 'azure_service_connection'
-  terraformVersion: '1.5.5'
+  terraformVersion: '1.10.1'
   backendResourceGroup: 'rg-qr-code'
   backendStorageAccountName: 'tfqrcode'
 
@@ -25,7 +25,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
-              workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
+              workingDirectory: '../product-infrastructure'
               backendServiceArm: '$(azureServiceConnection)'
               backendAzureRmResourceGroupName: '$(backendResourceGroup)'
               backendAzureRmStorageAccountName: '$(backendStorageAccountName)'
@@ -37,7 +37,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'validate'
-              workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
+              workingDirectory: '../product-infrastructure'
 
           - task: TerraformTaskV4@4
             displayName: 'Terraform Plan'
@@ -45,7 +45,7 @@ stages:
               provider: 'azurerm'
               command: 'plan'
               environmentServiceNameAzureRM: '$(azureServiceConnection)'
-              workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
+              workingDirectory: '../product-infrastructure'
               commandOptions: '-out=tfplan'
 
           - task: TerraformTaskV4@4
@@ -53,7 +53,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              workingDirectory: '$(Build.SourcesDirectory/product-infrastructure)'
+              workingDirectory: '../product-infrastructure'
               commandOptions: 'tfplan --auto-approve'
               environmentServiceName: '$(azureServiceConnection)'
               backendServiceArm: '$(azureServiceConnection)'
